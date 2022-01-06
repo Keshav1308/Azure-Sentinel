@@ -1,0 +1,25 @@
+Name: Incident Closed on Same Day
+
+description: |  Incident Closed on Same Day. This will give you information about the Incidnets which were closed on the same day.
+
+severity: Informaiton
+requiredDataConnectors:
+  - connectorId: SecurityIncident
+    dataTypes:
+      - SecurityEvent
+queryFrequency: 1d
+queryPeriod: 1d
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - NA
+relevantTechniques:
+  - NA
+query: |
+
+SecurityIncident
+| where Status == "Closed"
+| extend create_day = startofday(CreatedTime)
+| extend closed_day = startofday(ClosedTime)
+| where create_day == closed_day 
+| extend Incident_Closed_On_SameDay = iif(create_day == closed_day, "This Incident is  closed on Same day", "Incident is not closed on same day" )
